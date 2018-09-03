@@ -1,0 +1,261 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#define ESC 0
+#define UP 1
+#define DOWN 2
+#define LEFT 3
+#define RIGHT 4
+void setmatrix(int a[][4]);
+void showmatrix(int a[][4]);
+int getkey();
+int shiftup(int a[][4]);
+int shiftdown(int a[][4]);
+int shiftleft(int a[][4]);
+int shiftright(int a[][4]);
+int checkwin(int a[][4]);
+
+int checkwin(int a[][4])
+{
+    int i,j,count=1;
+    for(i=0;i<=3;i++)
+        for(j=0;j<=3;j++)
+    {
+        if(a[i][j]==count|| a[i][j]==0)
+            count++;
+        else
+            return(0);
+    }
+        return(1);
+}
+
+int shiftright(int a[][4])
+{
+    int i,j,temp,zerofound=0;
+    for(i=0;i<=3;i++)
+    {
+        for(j=0;j<=3;j++)
+    {
+        if(a[i][j]==0)
+        {
+            zerofound=1;
+            break;
+        }
+    }
+    if(zerofound)
+        break;
+    }
+    if(j==0)
+        return(0);
+    else
+    {
+        temp=a[i][j];
+        a[i][j]=a[i][j-1];
+        a[i][j-1]=temp;
+        return(1);
+    }
+
+
+}
+
+
+int shiftleft(int a[][4])
+{
+    int i,j,temp,zerofound=0;
+    for(i=0;i<=3;i++)
+    {
+        for(j=0;j<=3;j++)
+    {
+        if(a[i][j]==0)
+        {
+            zerofound=1;
+            break;
+        }
+    }
+    if(zerofound)
+        break;
+    }
+    if(j==3)
+        return(0);
+    else
+    {
+        temp=a[i][j];
+        a[i][j]=a[i][j+1];
+        a[i][j+1]=temp;
+        return(1);
+    }
+
+
+}
+
+int shiftup(int a[][4])
+{
+    int i,j,temp,zerofound=0;
+    for(i=0;i<=3;i++)
+    {
+        for(j=0;j<=3;j++)
+    {
+        if(a[i][j]==0)
+        {
+            zerofound=1;
+            break;
+        }
+    }
+    if(zerofound)
+        break;
+    }
+    if(i==3)
+        return(0);
+    else
+    {
+        temp=a[i][j];
+        a[i][j]=a[i+1][j];
+        a[i+1][j]=temp;
+        return(1);
+    }
+
+
+}
+
+int shiftdown(int a[][4])
+{
+    int i,j,temp,zerofound=0;
+    for(i=0;i<=3;i++)
+    {
+        for(j=0;j<=3;j++)
+    {
+        if(a[i][j]==0)
+        {
+            zerofound=1;
+            break;
+        }
+    }
+    if(zerofound)
+        break;
+    }
+    if(i==0)
+        return(0);
+    else
+    {
+        temp=a[i][j];
+        a[i][j]=a[i-1][j];
+        a[i-1][j]=temp;
+        return(1);
+    }
+
+
+}
+
+
+int getkey()
+{
+    int ch;
+    ch=getch();
+    if(ch==0)
+        ch=getch();
+    switch(ch)
+    {
+    case 27:
+        return(ESC);
+    case 72:
+        return(UP);
+    case 80:
+        return(DOWN);
+    case 75:
+        return(LEFT);
+    case 77:
+        return(RIGHT);
+    default:
+        return(5);
+    }
+}
+
+void showmatrix(int a[][4])
+{
+    int i,j;
+    printf("\n--------------------------\n | ");
+    for(i=0;i<=3;i++)
+    {
+        for(j=0;j<=3;j++)
+        {
+            if(a[i][j]!=0)
+                printf(" %-2d | ",a[i][j]);
+            else
+                printf("    | ");
+        }
+        printf("\n--------------------------\n");
+
+    if(i!=3)
+        printf(" | ");
+    }
+
+}
+
+void setmatrix(int a[][4])
+{
+ int pool[15]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+ int i,j,index,maxindex=14;
+ srand(time(NULL));
+ for(i=0;i<=3;i++)
+ {
+    for(j=0;j<=3;j++)
+ {
+     if(maxindex>=0)
+     {
+         index=rand()%(maxindex+1);
+         a[i][j]=pool[index];
+         pool[index]=pool[maxindex];
+         maxindex--;
+     }
+     else
+        a[i][j]=0;
+ }
+}
+}
+
+int main()
+{
+    int a[4][4],move=500;
+    setmatrix(a);
+    while(move)
+    {
+        printf("\n Moves Remaining: %d",move);
+        showmatrix(a);
+        if(checkwin(a))
+        {
+            printf("\n Congratulation You Win in %d moves",500-move);
+            printf("\n Enter any key to end the game\n");
+            getch();
+            exit(1);
+        }
+        switch(getkey())
+        {
+        case ESC:
+            exit(1);
+        break;
+        case UP:
+            if(!shiftup(a))
+            move++;
+            break;
+        case DOWN:
+            if(!shiftdown(a))
+                move++;
+            break;
+        case LEFT:
+            if(!shiftleft(a))
+                move++;
+            break;
+        case RIGHT:
+            if(!shiftright(a))
+                move++;
+            break;
+        default:
+            move++;
+            break;
+        }
+        move--;
+        system("cls");
+
+    }
+
+}
